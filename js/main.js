@@ -96,7 +96,7 @@ function addtoPictures(array) {
     picturesContainer.appendChild(renderUserPictures(array[i]));
   }
 
-  return picturesContainer.appendChild(fragment);
+  return fragment;
 }
 
 addtoPictures(userPictures);

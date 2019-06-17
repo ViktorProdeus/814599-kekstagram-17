@@ -39,7 +39,8 @@ function getRandomElement(array) {
 // Функция, которая генерирует массив комментариев
 function generateUserComments(messages, names) {
   var userComments = [];
-  for (var i = 1; i <= dataUserPictures.NUMBERS_AVATARS; i++) {
+  var count = getRandomNumber(0, dataUserPictures.COMMENTS_LENGTH);
+  for (var i = 1; i <= count; i++) {
     userComments.push({
       avatars: 'img/avatar-' + i + '.svg',
       messages: getRandomElement(messages),
@@ -70,7 +71,7 @@ function renderUserPictures(picture) {
 
   cloneInElement.querySelector('.picture__img').src = picture.url;
   cloneInElement.querySelector('.picture__likes').textContent = picture.likes;
-  cloneInElement.querySelector('.picture__comments').textContent = picture.comments;
+  cloneInElement.querySelector('.picture__comments').textContent = picture.comments.length;
 
   return cloneInElement;
 }

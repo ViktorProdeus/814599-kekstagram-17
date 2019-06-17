@@ -24,13 +24,13 @@ var dataUserPictures = {
 
 // Функция, возвращающая случайное число в диапазоне
 function getRandomNumber(min, max) {
+
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // Функция, возвращающая случайный элемемент массива
 function getRandomElement(array) {
   var randomIndex = Math.floor(Math.random() * array.length);
-
   var randomElement = array[randomIndex];
 
   return randomElement;
@@ -40,26 +40,38 @@ function getRandomElement(array) {
 function generateUserComments(messages, names) {
   var userComments = [];
   var count = getRandomNumber(0, dataUserPictures.COMMENTS_LENGTH);
+
   for (var i = 1; i <= count; i++) {
+    var avatarCount = getRandomNumber(1, dataUserPictures.NUMBERS_AVATARS);
+
     userComments.push({
-      avatars: 'img/avatar-' + i + '.svg',
+      avatars: 'img/avatar-' + avatarCount + '.svg',
       messages: getRandomElement(messages),
       names: getRandomElement(names)
     });
   }
+
   return userComments;
 }
 
 // Функция, которая генерирует массив фотографий
 function generateUserPictures(dataPictures) {
   var userPictures = [];
-  for (var i = 1; i <= dataPictures.NUMBERS_IMAGES; i++) {
+  var count = dataPictures.NUMBERS_IMAGES;
+
+  for (var i = 1; i <= count; i++) {
+    var LIKES_MIN = dataPictures.LIKES_MIN;
+    var LIKES_MAX = dataPictures.LIKES_MAX;
+    var MESSAGES = dataUserPictures.MESSAGES;
+    var NAMES = dataUserPictures.NAMES;
+
     userPictures.push({
       url: 'photos/' + i + '.jpg',
-      likes: getRandomNumber(dataPictures.LIKES_MIN, dataPictures.LIKES_MAX),
-      comments: generateUserComments(dataUserPictures.MESSAGES, dataUserPictures.NAMES)
+      likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
+      comments: generateUserComments(MESSAGES, NAMES)
     });
   }
+
   return userPictures;
 }
 
@@ -83,6 +95,7 @@ function addtoPictures(array) {
   for (var i = 0; i < array.length; i++) {
     picturesContainer.appendChild(renderUserPictures(array[i]));
   }
+
   return picturesContainer.appendChild(fragment);
 }
 

@@ -77,13 +77,13 @@ function renderUserPictures(picture) {
 }
 
 // Добавляем шаблон в контейнер для изображений
-function addtoPictures() {
+function addtoPictures(array) {
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < userPictures.length; i++) {
-    picturesContainer.appendChild(renderUserPictures(userPictures[i]));
+  for (var i = 0; i < array.length; i++) {
+    picturesContainer.appendChild(renderUserPictures(array[i]));
   }
   return picturesContainer.appendChild(fragment);
 }
 
-addtoPictures();
+addtoPictures(userPictures);

@@ -17,7 +17,7 @@ var dataUserPictures = {
   LIKES_MAX: 200,
 
   NUMBERS_AVATARS: 6,
-  NAME: ['Артем', 'Рома', 'Эльдар', 'Мухамед', 'Вероника', 'Аркадий', 'Кекс', 'Дима', 'Борис', 'Толик'],
+  NAMES: ['Артем', 'Рома', 'Эльдар', 'Мухамед', 'Вероника', 'Аркадий', 'Кекс', 'Дима', 'Борис', 'Толик'],
   MESSAGES: ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'],
   COMMENTS_LENGTH: 10
 };
@@ -37,36 +37,32 @@ function getRandomElement(array) {
 }
 
 // Функция, которая генерирует массив комментариев
-function generateUserComments(array, length) {
-  array = [];
-  for (var i = 1; i <= length; i++) {
-    array.push({
+function generateUserComments(messages, names) {
+  var userComments = [];
+  for (var i = 1; i <= dataUserPictures.NUMBERS_AVATARS; i++) {
+    userComments.push({
       avatars: 'img/avatar-' + i + '.svg',
-      messages: getRandomElement(dataUserPictures.MESSAGES),
-      names: getRandomElement(dataUserPictures.NAME)
+      messages: getRandomElement(messages),
+      names: getRandomElement(names)
     });
   }
-  return array;
+  return userComments;
 }
-
-var userComments = generateUserComments(userComments, dataUserPictures.NUMBERS_AVATARS);
-
 
 // Функция, которая генерирует массив фотографий
-function generateUserPictures(array, length) {
-  array = [];
-  for (var i = 1; i <= length; i++) {
-    array.push({
+function generateUserPictures(dataPictures) {
+  var userPictures = [];
+  for (var i = 1; i <= dataPictures.NUMBERS_IMAGES; i++) {
+    userPictures.push({
       url: 'photos/' + i + '.jpg',
-      likes: getRandomNumber(dataUserPictures.LIKES_MIN, dataUserPictures.LIKES_MAX),
-      comments: getRandomNumber(0, 10)
+      likes: getRandomNumber(dataPictures.LIKES_MIN, dataPictures.LIKES_MAX),
+      comments: generateUserComments(dataUserPictures.MESSAGES, dataUserPictures.NAMES)
     });
   }
-  return array;
+  return userPictures;
 }
 
-var userPictures = generateUserPictures(userPictures, dataUserPictures.NUMBERS_IMAGES);
-
+var userPictures = generateUserPictures(dataUserPictures);
 
 // Генерируем шаблон фотографий
 function renderUserPictures(picture) {

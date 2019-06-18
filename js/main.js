@@ -93,5 +93,5 @@ function addtoPictures(array) {
   return fragment;
 }
 
-// Выводим созданные фотографии на страницу
+// Выводим шаблон на страницу
 addtoPictures(createUserPictures());

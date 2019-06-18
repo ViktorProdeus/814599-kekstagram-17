@@ -1,16 +1,8 @@
 'use strict';
 
-// Нашли контейнер для вставки фотографий
-var picturesContainer = document.querySelector('.pictures');
 
-// Нашли шаблон и контент внутри него
-var picturesTemplate = document.querySelector('#picture')
-  .content
-  .querySelector('.picture');
-
-// Свойства фотографий, опубликованных пользователем
+// Массив с данными из ТЗ
 var dataUserPictures = {
-  // количество фотографий
   NUMBERS_IMAGES: 25,
 
   LIKES_MIN: 15,
@@ -36,8 +28,8 @@ function getRandomElement(array) {
   return randomElement;
 }
 
-// Функция, которая генерирует массив комментариев
-function generateUserComments(messages, names) {
+// Функция, которая создает массив комментариев
+function createUserComments(messages, names) {
   var userComments = [];
   var count = getRandomNumber(0, dataUserPictures.COMMENTS_LENGTH);
 
@@ -54,31 +46,32 @@ function generateUserComments(messages, names) {
   return userComments;
 }
 
-// Функция, которая генерирует массив фотографий
-function generateUserPictures(dataPictures) {
+// Функция, которая создает массив фотографий с данными
+function createUserPictures() {
   var userPictures = [];
-  var count = dataPictures.NUMBERS_IMAGES;
+  var count = dataUserPictures.NUMBERS_IMAGES;
 
   for (var i = 1; i <= count; i++) {
-    var LIKES_MIN = dataPictures.LIKES_MIN;
-    var LIKES_MAX = dataPictures.LIKES_MAX;
+    var LIKES_MIN = dataUserPictures.LIKES_MIN;
+    var LIKES_MAX = dataUserPictures.LIKES_MAX;
     var MESSAGES = dataUserPictures.MESSAGES;
     var NAMES = dataUserPictures.NAMES;
 
     userPictures.push({
       url: 'photos/' + i + '.jpg',
       likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
-      comments: generateUserComments(MESSAGES, NAMES)
+      comments: createUserComments(MESSAGES, NAMES)
     });
   }
 
   return userPictures;
 }
 
-var userPictures = generateUserPictures(dataUserPictures);
-
 // Генерируем шаблон фотографий
 function renderUserPictures(picture) {
+  var picturesTemplate = document.querySelector('#picture')
+  .content.querySelector('.picture');
+
   var cloneInElement = picturesTemplate.cloneNode(true);
 
   cloneInElement.querySelector('.picture__img').src = picture.url;
@@ -91,6 +84,7 @@ function renderUserPictures(picture) {
 // Добавляем шаблон в контейнер для изображений
 function addtoPictures(array) {
   var fragment = document.createDocumentFragment();
+  var picturesContainer = document.querySelector('.pictures');
 
   for (var i = 0; i < array.length; i++) {
     picturesContainer.appendChild(renderUserPictures(array[i]));
@@ -99,4 +93,5 @@ function addtoPictures(array) {
   return fragment;
 }
 
-addtoPictures(userPictures);
+// Выводим созданные фотографии на страницу
+addtoPictures(createUserPictures());

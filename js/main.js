@@ -1,5 +1,7 @@
 'use strict';
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 // Массив с данными из ТЗ
 var dataUserPictures = {
@@ -14,7 +16,90 @@ var dataUserPictures = {
   COMMENTS_LENGTH: 10
 };
 
+// Объявили обработчик ESC
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePopup();
+  }
+};
+
+// Функция открытия popup
+var openPopup = function () {
+  document.querySelector('.img-upload__overlay').classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+  document.querySelector('.img-upload__input').value = '';
+};
+
+// Функция закрытия popup
+var closePopup = function () {
+  document.querySelector('.img-upload__overlay').classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+document.addEventListener('change', function (evt) {
+  var target = evt.target;
+
+  while (target !== document) {
+    if (target.classList.contains('img-upload__input')) {
+      openPopup(target);
+      return;
+    }
+
+    target = target.parentNode;
+  }
+}, true);
+
+document.addEventListener('click', function (evt) {
+  var target = evt.target;
+
+  while (target !== document) {
+
+    if (target.classList.contains('img-upload__cancel')) {
+      closePopup();
+      return;
+    }
+
+    target = target.parentNode;
+  }
+});
+
+document.addEventListener('keydown', function (evt) {
+  var target = evt.target;
+
+  while (target !== document) {
+
+    if (target.classList.contains('img-upload__cancel') && evt.keyCode === ENTER_KEYCODE) {
+      closePopup();
+      return;
+    }
+
+    target = target.parentNode;
+  }
+});
+
+document.addEventListener('mouseup', function (evt) {
+  var target = evt.target;
+  var STEP_VALUE = 25;
+
+  while (target !== document) {
+
+    if (target.classList.contains('scale__control--smaller')) {
+      document.querySelector('.scale__control--value').value = STEP_VALUE + '%';
+      return;
+    }
+
+    if (target.classList.contains('scale__control--bigger')) {
+      document.querySelector('.scale__control--value').value = '100' + '%';
+      return;
+    }
+
+    target = target.parentNode;
+  }
+});
+
+
 // Функция, возвращающая случайное число в диапазоне
+
 function getRandomNumber(min, max) {
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -70,7 +155,7 @@ function createUserPictures() {
 // Генерируем шаблон фотографий
 function renderUserPictures(picture) {
   var picturesTemplate = document.querySelector('#picture')
-  .content.querySelector('.picture');
+    .content.querySelector('.picture');
 
   var cloneInElement = picturesTemplate.cloneNode(true);
 

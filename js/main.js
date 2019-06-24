@@ -27,13 +27,17 @@ var onPopupEscPress = function (evt) {
 var openPopup = function () {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
-  document.querySelector('.img-upload__input').value = '';
+  document.querySelector('.img-upload__preview img').removeAttribute('class');
+  document.querySelector('.effect-level__pin').style.left = '100%';
+  document.querySelector('.effect-level__depth').style.width = '100%';
+  document.querySelector('.img-upload__effect-level').classList.add('hidden');
 };
 
 // Функция закрытия popup
 var closePopup = function () {
   document.querySelector('.img-upload__overlay').classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  document.querySelector('.img-upload__preview').style.transform = '';
 };
 
 document.addEventListener('change', function (evt) {
@@ -49,14 +53,83 @@ document.addEventListener('change', function (evt) {
   }
 }, true);
 
+var MAX_VALUE = 100;
+var MIN_VALUE = 25;
+var STEP_VALUE = 25;
+var CURENT_VALUE = document.querySelector('.scale__control--value');
+
+function checksRange(min, max, current) {
+  return (current > min && current < max);
+}
+
+function changeValueControl(step, valueRange) {
+  var current = parseInt(CURENT_VALUE.value, 10) - step;
+
+  if (!checksRange(MIN_VALUE, MAX_VALUE, current)) {
+    current = valueRange;
+  }
+
+  CURENT_VALUE.value = current;
+
+  document.querySelector('.img-upload__preview').style.transform = 'scale(' + (CURENT_VALUE.value / 100) + ')';
+
+  CURENT_VALUE.value += '%';
+
+  return;
+}
+
+function getEfect(efect) {
+  document.querySelector('.effect-level__pin').style.left = '100%';
+  document.querySelector('.effect-level__depth').style.width = '100%';
+  document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+  document.querySelector('.img-upload__preview img').setAttribute('class', 'effects__preview--' + efect);
+  return;
+}
+
 document.addEventListener('click', function (evt) {
   var target = evt.target;
 
-  while (target !== document) {
 
+  while (target !== document) {
     if (target.classList.contains('img-upload__cancel')) {
       closePopup();
       return;
+    }
+
+    if (target.classList.contains('scale__control--smaller')) {
+      changeValueControl(STEP_VALUE, MIN_VALUE);
+      return;
+    }
+
+    if (target.classList.contains('scale__control--bigger')) {
+      changeValueControl((-STEP_VALUE), MAX_VALUE);
+      return;
+    }
+
+    if (target.classList.contains('effects__preview--none')) {
+      document.querySelector('.img-upload__effect-level').classList.add('hidden');
+      document.querySelector('.img-upload__preview img').setAttribute('class', 'effects__preview--none');
+      return;
+    }
+
+    if (target.classList.contains('effects__preview--chrome')) {
+      getEfect('chrome');
+    }
+
+    if (target.classList.contains('effects__preview--sepia')) {
+      getEfect('sepia');
+    }
+
+    if (target.classList.contains('effects__preview--marvin')) {
+      getEfect('marvin');
+    }
+
+    if (target.classList.contains('effects__preview--phobos')) {
+      getEfect('phobos');
+    }
+
+    if (target.classList.contains('effects__preview--heat')) {
+      getEfect('heat');
     }
 
     target = target.parentNode;
@@ -77,25 +150,20 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-document.addEventListener('mouseup', function (evt) {
-  var target = evt.target;
-  var STEP_VALUE = 25;
+// document.addEventListener('mouseup', function (evt) {
+//   var target = evt.target;
 
-  while (target !== document) {
+//   while (target !== document) {
 
-    if (target.classList.contains('scale__control--smaller')) {
-      document.querySelector('.scale__control--value').value = STEP_VALUE + '%';
-      return;
-    }
+//     if (target.classList.contains('effect-level__pin')) {
+//       closePopup();
+//       return;
+//     }
 
-    if (target.classList.contains('scale__control--bigger')) {
-      document.querySelector('.scale__control--value').value = '100' + '%';
-      return;
-    }
 
-    target = target.parentNode;
-  }
-});
+//     target = target.parentNode;
+//   }
+// });
 
 
 // Функция, возвращающая случайное число в диапазоне

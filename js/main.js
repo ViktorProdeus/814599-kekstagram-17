@@ -27,7 +27,6 @@ var onPopupEscPress = function (evt) {
 var openPopup = function () {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
-  document.querySelector('.img-upload__preview img').removeAttribute('class');
   document.querySelector('.effect-level__pin').style.left = '100%';
   document.querySelector('.effect-level__depth').style.width = '100%';
   document.querySelector('.img-upload__effect-level').classList.add('hidden');
@@ -38,6 +37,8 @@ var closePopup = function () {
   document.querySelector('.img-upload__overlay').classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   document.querySelector('.img-upload__preview').style.transform = '';
+  document.querySelector('.img-upload__input').setAttribute('value', '');
+  document.querySelector('.img-upload__preview img').removeAttribute('class');
 };
 
 document.addEventListener('change', function (evt) {
@@ -56,33 +57,53 @@ document.addEventListener('change', function (evt) {
 var MAX_VALUE = 100;
 var MIN_VALUE = 25;
 var STEP_VALUE = 25;
-var CURENT_VALUE = document.querySelector('.scale__control--value');
+var CURRENT_VALUE = document.querySelector('.scale__control--value');
+var CURRENT_PIN_POSITION = document.querySelector('.effect-level__pin');
+var IMG_PREWIEW = document.querySelector('.img-upload__preview img');
 
 function checksRange(min, max, current) {
   return (current > min && current < max);
 }
 
-function changeValueControl(step, valueRange) {
-  var current = parseInt(CURENT_VALUE.value, 10) - step;
+function changeImgSize(step, valueRange, current) {
+  current -= step;
 
   if (!checksRange(MIN_VALUE, MAX_VALUE, current)) {
     current = valueRange;
   }
+  document.querySelector('.img-upload__preview').style.transform = 'scale(' + (current / 100) + ')';
 
-  CURENT_VALUE.value = current;
-
-  document.querySelector('.img-upload__preview').style.transform = 'scale(' + (CURENT_VALUE.value / 100) + ')';
-
-  CURENT_VALUE.value += '%';
-
-  return;
+  return current + '%';
 }
 
+function changeEfect(efectType, valueRange, current) {
+
+  if (!checksRange(0, MAX_VALUE, current)) {
+    current = valueRange;
+  }
+
+  if (IMG_PREWIEW.classList.contains('effects__preview--marvin')) {
+    IMG_PREWIEW.style.filter = efectType + '(' + current + '%' + ')';
+  } else {
+    IMG_PREWIEW.style.filter = efectType + '(' + (current / 100) + ')';
+  }
+  if (IMG_PREWIEW.classList.contains('effects__preview--phobos')) {
+    IMG_PREWIEW.style.filter = efectType + '(' + (current / 100 * 3) + 'px' + ')';
+  }
+  if (IMG_PREWIEW.classList.contains('effects__preview--heat') && current > 1) {
+    IMG_PREWIEW.style.filter = efectType + '(' + (current / 100 * 3) + ')';
+  }
+
+  return current;
+}
+
+
 function getEfect(efect) {
-  document.querySelector('.effect-level__pin').style.left = '100%';
-  document.querySelector('.effect-level__depth').style.width = '100%';
+  document.querySelector('.effect-level__pin').style.left = 100 + '%';
+  document.querySelector('.effect-level__depth').style.width = document.querySelector('.effect-level__pin').style.left;
   document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-  document.querySelector('.img-upload__preview img').setAttribute('class', 'effects__preview--' + efect);
+  IMG_PREWIEW.setAttribute('class', 'effects__preview--' + efect);
+  IMG_PREWIEW.removeAttribute('style');
   return;
 }
 
@@ -97,18 +118,21 @@ document.addEventListener('click', function (evt) {
     }
 
     if (target.classList.contains('scale__control--smaller')) {
-      changeValueControl(STEP_VALUE, MIN_VALUE);
+      // получили текущее значение при уменьшении картинки
+      CURRENT_VALUE.value = changeImgSize(STEP_VALUE, MIN_VALUE, parseInt(CURRENT_VALUE.value, 10));
       return;
     }
 
     if (target.classList.contains('scale__control--bigger')) {
-      changeValueControl((-STEP_VALUE), MAX_VALUE);
+      // получили текущее значение при уменьшении картинки
+      CURRENT_VALUE.value = changeImgSize(-(STEP_VALUE), MAX_VALUE, parseInt(CURRENT_VALUE.value, 10));
       return;
     }
 
     if (target.classList.contains('effects__preview--none')) {
       document.querySelector('.img-upload__effect-level').classList.add('hidden');
-      document.querySelector('.img-upload__preview img').setAttribute('class', 'effects__preview--none');
+      IMG_PREWIEW.removeAttribute('class');
+      IMG_PREWIEW.removeAttribute('style');
       return;
     }
 
@@ -150,20 +174,44 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
-// document.addEventListener('mouseup', function (evt) {
-//   var target = evt.target;
+document.addEventListener('mouseup', function (evt) {
+  var target = evt.target;
 
-//   while (target !== document) {
+  while (target !== document) {
 
-//     if (target.classList.contains('effect-level__pin')) {
-//       closePopup();
-//       return;
-//     }
+    if (target.classList.contains('effect-level__pin')) {
+      if (IMG_PREWIEW.classList.contains('effects__preview--chrome')) {
+        CURRENT_PIN_POSITION.style.left = changeEfect('grayscale', MAX_VALUE, parseInt(CURRENT_PIN_POSITION.style.left, 10));
+
+        return;
+      }
+      if (IMG_PREWIEW.classList.contains('effects__preview--sepia')) {
+        CURRENT_PIN_POSITION.style.left = changeEfect('sepia', MAX_VALUE, parseInt(CURRENT_PIN_POSITION.style.left, 10));
+
+        return;
+      }
+      if (IMG_PREWIEW.classList.contains('effects__preview--marvin')) {
+        CURRENT_PIN_POSITION.style.left = changeEfect('invert', MAX_VALUE, parseInt(CURRENT_PIN_POSITION.style.left, 10));
+
+        return;
+      }
+      if (IMG_PREWIEW.classList.contains('effects__preview--phobos')) {
+        CURRENT_PIN_POSITION.style.left = changeEfect('blur', MAX_VALUE, parseInt(CURRENT_PIN_POSITION.style.left, 10));
+
+        return;
+      }
+      if (IMG_PREWIEW.classList.contains('effects__preview--heat')) {
+        CURRENT_PIN_POSITION.style.left = changeEfect('brightness', MAX_VALUE, parseInt(CURRENT_PIN_POSITION.style.left, 10));
+
+        return;
+      }
+
+    }
 
 
-//     target = target.parentNode;
-//   }
-// });
+    target = target.parentNode;
+  }
+});
 
 
 // Функция, возвращающая случайное число в диапазоне

@@ -41,6 +41,7 @@ var openPopup = function () {
   document.querySelector('.effect-level__depth').style.width = '100%';
   document.querySelector('.img-upload__effect-level').classList.add('hidden');
   document.addEventListener('keydown', onPopupEscPress);
+  document.querySelector('.effects__radio').checked = 'false';
 };
 
 // Функция закрытия popup

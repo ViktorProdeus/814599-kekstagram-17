@@ -3,6 +3,16 @@
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var MAX_VALUE = 100;
+var MIN_VALUE = 25;
+var STEP_VALUE = 25;
+var CURRENT_VALUE = document.querySelector('.scale__control--value');
+var CURRENT_PIN_POSITION = document.querySelector('.effect-level__pin');
+var IMG_PREWIEW = document.querySelector('.img-upload__preview img');
+var EFFECT_LINE = document.querySelector('.effect-level__line');
+var EFFECT_LINE_DEPTH = document.querySelector('.effect-level__depth');
+var EFFECT_VALUE = document.querySelector('.effect-level__value');
+
 // Массив с данными из ТЗ
 var dataUserPictures = {
   NUMBERS_IMAGES: 25,
@@ -38,8 +48,11 @@ var closePopup = function () {
   document.querySelector('.img-upload__overlay').classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   document.querySelector('.img-upload__preview').style.transform = '';
-  document.querySelector('.img-upload__input').setAttribute('value', '');
-  document.querySelector('.img-upload__preview img').removeAttribute('class');
+  document.querySelector('.img-upload__input').value = '';
+  document.querySelector('.scale__control--value').value = MAX_VALUE + '%';
+  document.querySelector('.scale__control--value').setAttribute('value', MAX_VALUE + '%');
+  IMG_PREWIEW.removeAttribute('class');
+  IMG_PREWIEW.removeAttribute('style');
 };
 
 document.addEventListener('change', function (evt) {
@@ -54,16 +67,6 @@ document.addEventListener('change', function (evt) {
     target = target.parentNode;
   }
 }, true);
-
-var MAX_VALUE = 100;
-var MIN_VALUE = 25;
-var STEP_VALUE = 25;
-var CURRENT_VALUE = document.querySelector('.scale__control--value');
-var CURRENT_PIN_POSITION = document.querySelector('.effect-level__pin');
-var IMG_PREWIEW = document.querySelector('.img-upload__preview img');
-var EFFECT_LINE = document.querySelector('.effect-level__line');
-var EFFECT_LINE_DEPTH = document.querySelector('.effect-level__depth');
-var EFFECT_VALUE = document.querySelector('.effect-level__value');
 
 function checksRange(min, max, current) {
   return (current > min && current < max);
@@ -139,12 +142,14 @@ document.addEventListener('click', function (evt) {
     if (target.classList.contains('scale__control--smaller')) {
       // получили текущее значение при уменьшении картинки
       CURRENT_VALUE.value = changeImgSize(STEP_VALUE, MIN_VALUE, parseInt(CURRENT_VALUE.value, 10));
+      document.querySelector('.scale__control--value').setAttribute('value', CURRENT_VALUE.value);
       return;
     }
 
     if (target.classList.contains('scale__control--bigger')) {
       // получили текущее значение при уменьшении картинки
       CURRENT_VALUE.value = changeImgSize(-(STEP_VALUE), MAX_VALUE, parseInt(CURRENT_VALUE.value, 10));
+      document.querySelector('.scale__control--value').setAttribute('value', CURRENT_VALUE.value);
       return;
     }
 

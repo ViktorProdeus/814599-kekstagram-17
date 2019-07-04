@@ -227,6 +227,8 @@ document.addEventListener('mousedown', function (evt) {
         EFFECT_LINE_DEPTH.style.width = CURRENT_PIN_POSITION.style.left;
         EFFECT_VALUE.setAttribute('value', parseInt(CURRENT_PIN_POSITION.style.left, 10));
 
+        changeEffect(parseInt(CURRENT_PIN_POSITION.style.left, 10));
+
         target.style.left = Math.ceil(value) + '%';
       };
 
@@ -238,8 +240,6 @@ document.addEventListener('mousedown', function (evt) {
         CURRENT_PIN_POSITION.style.left = getCoords(EFFECT_LINE, evt);
         EFFECT_LINE_DEPTH.style.width = CURRENT_PIN_POSITION.style.left;
         EFFECT_VALUE.setAttribute('value', parseInt(CURRENT_PIN_POSITION.style.left, 10));
-
-        changeEffect(parseInt(CURRENT_PIN_POSITION.style.left, 10));
       };
 
       return;
@@ -248,6 +248,36 @@ document.addEventListener('mousedown', function (evt) {
     target = target.parentNode;
   }
 });
+
+document.addEventListener('focus', function (evt) {
+  var target = evt.target;
+
+  while (target !== document) {
+    if (target.classList.contains('text__hashtags')) {
+      document.removeEventListener('keydown', onPopupEscPress);
+    }
+
+    if (target.classList.contains('text__description')) {
+      document.removeEventListener('keydown', onPopupEscPress);
+    }
+    target = target.parentNode;
+  }
+}, true);
+
+document.addEventListener('blur', function (evt) {
+  var target = evt.target;
+
+  while (target !== document) {
+    if (target.classList.contains('text__hashtags')) {
+      document.addEventListener('keydown', onPopupEscPress);
+    }
+
+    if (target.classList.contains('text__description')) {
+      document.addEventListener('keydown', onPopupEscPress);
+    }
+    target = target.parentNode;
+  }
+}, true);
 
 
 // Функция, возвращающая случайное число в диапазоне

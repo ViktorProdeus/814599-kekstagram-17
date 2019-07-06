@@ -211,7 +211,7 @@ document.addEventListener('mousedown', function (evt) {
 
       document.onmousemove = function (moveEvt) {
         var coords = getCoords(EFFECT_LINE, moveEvt);
-        var value = (coords.x - shifts.x) / EFFECT_LINE.offsetWidth * 100;
+        var value = (coords.x - shifts.x + shifts.x) / EFFECT_LINE.offsetWidth * 100;
         if (value < 0) {
           value = 0;
         }
@@ -223,13 +223,10 @@ document.addEventListener('mousedown', function (evt) {
           return false;
         };
 
-        CURRENT_PIN_POSITION.style.left = getCoords(EFFECT_LINE, evt);
-        EFFECT_LINE_DEPTH.style.width = CURRENT_PIN_POSITION.style.left;
-        EFFECT_VALUE.setAttribute('value', parseInt(CURRENT_PIN_POSITION.style.left, 10));
-
-        changeEffect(parseInt(CURRENT_PIN_POSITION.style.left, 10));
-
         target.style.left = Math.ceil(value) + '%';
+        EFFECT_LINE_DEPTH.style.width = target.style.left;
+        EFFECT_VALUE.setAttribute('value', parseInt(target.style.left, 10));
+        changeEffect(parseInt(target.style.left, 10));
       };
 
       document.onmouseup = function () {
@@ -237,9 +234,9 @@ document.addEventListener('mousedown', function (evt) {
         document.onmousemove = null;
         document.onmouseup = null;
 
-        CURRENT_PIN_POSITION.style.left = getCoords(EFFECT_LINE, evt);
-        EFFECT_LINE_DEPTH.style.width = CURRENT_PIN_POSITION.style.left;
-        EFFECT_VALUE.setAttribute('value', parseInt(CURRENT_PIN_POSITION.style.left, 10));
+        EFFECT_LINE_DEPTH.style.width = target.style.left;
+        EFFECT_VALUE.setAttribute('value', parseInt(target.style.left, 10));
+        changeEffect(parseInt(target.style.left, 10));
       };
 
       return;

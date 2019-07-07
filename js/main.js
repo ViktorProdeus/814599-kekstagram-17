@@ -202,6 +202,7 @@ document.addEventListener('keydown', function (evt) {
 });
 
 document.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
   var target = evt.target;
 
   while (target !== document) {
@@ -219,27 +220,33 @@ document.addEventListener('mousedown', function (evt) {
           value = 100;
         }
 
-        target.ondragstart = function () {
-          return false;
-        };
-
-        CURRENT_PIN_POSITION.style.left = getCoords(EFFECT_LINE, evt);
-        EFFECT_LINE_DEPTH.style.width = CURRENT_PIN_POSITION.style.left;
-        EFFECT_VALUE.setAttribute('value', parseInt(CURRENT_PIN_POSITION.style.left, 10));
-
-        target.style.left = Math.ceil(value) + '%';
+        value = Math.ceil(value);
+        target.style.left = value + '%';
+        EFFECT_LINE_DEPTH.style.width = target.style.left;
+        EFFECT_VALUE.setAttribute('value', value);
+        changeEffect(value);
       };
 
-      document.onmouseup = function () {
+      document.onmouseup = function (upEvt) {
+        var coords = getCoords(EFFECT_LINE, upEvt);
+        var value = (coords.x - shifts.x) / EFFECT_LINE.offsetWidth * 100;
+        if (value < 0) {
+          value = 0;
+        }
+        if (value > 100) {
+          value = 100;
+        }
+
+        value = Math.ceil(value);
+
+        target.style.left = value + '%';
+        EFFECT_LINE_DEPTH.style.width = target.style.left;
+        EFFECT_VALUE.setAttribute('value', value);
+        changeEffect(value);
 
         document.onmousemove = null;
         document.onmouseup = null;
 
-        CURRENT_PIN_POSITION.style.left = getCoords(EFFECT_LINE, evt);
-        EFFECT_LINE_DEPTH.style.width = CURRENT_PIN_POSITION.style.left;
-        EFFECT_VALUE.setAttribute('value', parseInt(CURRENT_PIN_POSITION.style.left, 10));
-
-        changeEffect(parseInt(CURRENT_PIN_POSITION.style.left, 10));
       };
 
       return;
@@ -248,6 +255,36 @@ document.addEventListener('mousedown', function (evt) {
     target = target.parentNode;
   }
 });
+
+document.addEventListener('focus', function (evt) {
+  var target = evt.target;
+
+  while (target !== document) {
+    if (target.classList.contains('text__hashtags')) {
+      document.removeEventListener('keydown', onPopupEscPress);
+    }
+
+    if (target.classList.contains('text__description')) {
+      document.removeEventListener('keydown', onPopupEscPress);
+    }
+    target = target.parentNode;
+  }
+}, true);
+
+document.addEventListener('blur', function (evt) {
+  var target = evt.target;
+
+  while (target !== document) {
+    if (target.classList.contains('text__hashtags')) {
+      document.addEventListener('keydown', onPopupEscPress);
+    }
+
+    if (target.classList.contains('text__description')) {
+      document.addEventListener('keydown', onPopupEscPress);
+    }
+    target = target.parentNode;
+  }
+}, true);
 
 
 // Функция, возвращающая случайное число в диапазоне

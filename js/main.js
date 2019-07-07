@@ -202,6 +202,7 @@ document.addEventListener('keydown', function (evt) {
 });
 
 document.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
   var target = evt.target;
 
   while (target !== document) {
@@ -211,7 +212,7 @@ document.addEventListener('mousedown', function (evt) {
 
       document.onmousemove = function (moveEvt) {
         var coords = getCoords(EFFECT_LINE, moveEvt);
-        var value = (coords.x - shifts.x + shifts.x) / EFFECT_LINE.offsetWidth * 100;
+        var value = (coords.x - shifts.x) / EFFECT_LINE.offsetWidth * 100;
         if (value < 0) {
           value = 0;
         }
@@ -219,24 +220,33 @@ document.addEventListener('mousedown', function (evt) {
           value = 100;
         }
 
-        target.ondragstart = function () {
-          return false;
-        };
-
-        target.style.left = Math.ceil(value) + '%';
+        value = Math.ceil(value);
+        target.style.left = value + '%';
         EFFECT_LINE_DEPTH.style.width = target.style.left;
-        EFFECT_VALUE.setAttribute('value', parseInt(target.style.left, 10));
-        changeEffect(parseInt(target.style.left, 10));
+        EFFECT_VALUE.setAttribute('value', value);
+        changeEffect(value);
       };
 
-      document.onmouseup = function () {
+      document.onmouseup = function (upEvt) {
+        var coords = getCoords(EFFECT_LINE, upEvt);
+        var value = (coords.x - shifts.x) / EFFECT_LINE.offsetWidth * 100;
+        if (value < 0) {
+          value = 0;
+        }
+        if (value > 100) {
+          value = 100;
+        }
+
+        value = Math.ceil(value);
+
+        target.style.left = value + '%';
+        EFFECT_LINE_DEPTH.style.width = target.style.left;
+        EFFECT_VALUE.setAttribute('value', value);
+        changeEffect(value);
 
         document.onmousemove = null;
         document.onmouseup = null;
 
-        EFFECT_LINE_DEPTH.style.width = target.style.left;
-        EFFECT_VALUE.setAttribute('value', parseInt(target.style.left, 10));
-        changeEffect(parseInt(target.style.left, 10));
       };
 
       return;

@@ -213,7 +213,7 @@ document.addEventListener('mousedown', function (evt) {
         moveEvt.preventDefault();
 
         var coords = getCoords(EFFECT_LINE, moveEvt);
-        var value = (coords.x - shifts.x) / EFFECT_LINE.offsetWidth * 100;
+        var value = (coords.x + target.offsetWidth / 2 - shifts.x) / EFFECT_LINE.offsetWidth * 100;
         if (value < 0) {
           value = 0;
         }
@@ -235,7 +235,7 @@ document.addEventListener('mousedown', function (evt) {
           var shiftsUp = getCoords(targetUp, upEvt);
 
           var coords = getCoords(EFFECT_LINE, upEvt);
-          var value = (coords.x - shiftsUp.x) / EFFECT_LINE.offsetWidth * 100;
+          var value = (coords.x + targetUp.offsetWidth / 2 - shiftsUp.x) / EFFECT_LINE.offsetWidth * 100;
           if (value < 0) {
             value = 0;
           }

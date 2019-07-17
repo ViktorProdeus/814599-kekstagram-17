@@ -202,7 +202,6 @@ document.addEventListener('keydown', function (evt) {
 });
 
 document.addEventListener('mousedown', function (evt) {
-  evt.preventDefault();
   var target = evt.target;
 
   while (target !== document) {
@@ -211,8 +210,10 @@ document.addEventListener('mousedown', function (evt) {
       var shifts = getCoords(target, evt);
 
       document.onmousemove = function (moveEvt) {
+        moveEvt.preventDefault();
+
         var coords = getCoords(EFFECT_LINE, moveEvt);
-        var value = (coords.x - shifts.x) / EFFECT_LINE.offsetWidth * 100;
+        var value = (coords.x + target.offsetWidth / 2 - shifts.x) / EFFECT_LINE.offsetWidth * 100;
         if (value < 0) {
           value = 0;
         }
@@ -228,21 +229,27 @@ document.addEventListener('mousedown', function (evt) {
       };
 
       document.onmouseup = function (upEvt) {
-        var coords = getCoords(EFFECT_LINE, upEvt);
-        var value = (coords.x - shifts.x) / EFFECT_LINE.offsetWidth * 100;
-        if (value < 0) {
-          value = 0;
-        }
-        if (value > 100) {
-          value = 100;
-        }
+        var targetUp = upEvt.target;
 
-        value = Math.ceil(value);
+        if (targetUp.classList.contains('effect-level__pin')) {
+          var shiftsUp = getCoords(targetUp, upEvt);
 
-        target.style.left = value + '%';
-        EFFECT_LINE_DEPTH.style.width = target.style.left;
-        EFFECT_VALUE.setAttribute('value', value);
-        changeEffect(value);
+          var coords = getCoords(EFFECT_LINE, upEvt);
+          var value = (coords.x + targetUp.offsetWidth / 2 - shiftsUp.x) / EFFECT_LINE.offsetWidth * 100;
+          if (value < 0) {
+            value = 0;
+          }
+          if (value > 100) {
+            value = 100;
+          }
+
+          value = Math.ceil(value);
+
+          target.style.left = value + '%';
+          EFFECT_LINE_DEPTH.style.width = target.style.left;
+          EFFECT_VALUE.setAttribute('value', value);
+          changeEffect(value);
+        }
 
         document.onmousemove = null;
         document.onmouseup = null;

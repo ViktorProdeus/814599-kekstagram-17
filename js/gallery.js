@@ -39,15 +39,10 @@
     var count = window.dataUserPictures.NUMBERS_IMAGES;
 
     for (var i = 1; i <= count; i++) {
-      var LIKES_MIN = window.dataUserPictures.LIKES_MIN;
-      var LIKES_MAX = window.dataUserPictures.LIKES_MAX;
-      var MESSAGES = window.dataUserPictures.MESSAGES;
-      var NAMES = window.dataUserPictures.NAMES;
-
       userPictures.push({
         url: 'photos/' + i + '.jpg',
-        likes: getRandomNumber(LIKES_MIN, LIKES_MAX),
-        comments: createUserComments(MESSAGES, NAMES)
+        likes: getRandomNumber(window.dataUserPictures.LIKES_MIN, window.dataUserPictures.LIKES_MAX),
+        comments: createUserComments(window.dataUserPictures.MESSAGES, window.dataUserPictures.NAMES)
       });
     }
 

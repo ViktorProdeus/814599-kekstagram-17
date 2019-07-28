@@ -118,7 +118,6 @@
   document.addEventListener('click', function (evt) {
     var target = evt.target;
 
-
     while (target !== document) {
       if (target.classList.contains('img-upload__cancel')) {
         closePopup();
@@ -139,32 +138,35 @@
         return;
       }
 
-      if (target.getAttribute('id') === 'effect-none') {
-        document.querySelector('.img-upload__effect-level').classList.add('hidden');
-        IMG_PREWIEW.setAttribute('class', 'effects__preview--none');
-        IMG_PREWIEW.removeAttribute('style');
-        return;
-      }
+      switch (target.id) {
+        case 'effect-none':
+          document.querySelector('.img-upload__effect-level').classList.add('hidden');
+          IMG_PREWIEW.setAttribute('class', 'effects__preview--none');
+          IMG_PREWIEW.removeAttribute('style');
+          break;
 
-      if (target.getAttribute('id') === 'effect-chrome') {
-        getEffect('chrome');
-      }
+        case 'effect-chrome':
+          getEffect('chrome');
+          break;
 
-      if (target.getAttribute('id') === 'effect-sepia') {
-        getEffect('sepia');
-      }
+        case 'effect-sepia':
+          getEffect('sepia');
+          break;
 
-      if (target.getAttribute('id') === 'effect-marvin') {
-        getEffect('marvin');
-      }
+        case 'effect-marvin':
+          getEffect('marvin');
+          break;
 
-      if (target.getAttribute('id') === 'effect-phobos') {
+        case 'effect-phobos':
+          getEffect('phobos');
+          break;
 
-        getEffect('phobos');
-      }
+        case 'effect-heat':
+          getEffect('heat');
+          break;
 
-      if (target.getAttribute('id') === 'effect-heat') {
-        getEffect('heat');
+        default:
+
       }
 
       target = target.parentNode;

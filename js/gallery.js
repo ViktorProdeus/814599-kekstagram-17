@@ -2,30 +2,63 @@
 
 (function () {
 
-  // Генерируем шаблон фотографий
-  function renderUserPictures(picture) {
-    var picturesTemplate = document.querySelector('#picture')
-      .content.querySelector('.picture');
 
-    var cloneInElement = picturesTemplate.cloneNode(true);
+  var buttonPopular = document.querySelector('#filter-popular');
+  buttonPopular.addEventListener('click', function () {
+    deletePictures();
+    updatePictures(pictures);
+    window.util.resetActive(activeClassName, removeClassName);
+    buttonPopular.classList.add('img-filters__button--active');
+  });
 
-    cloneInElement.querySelector('.picture__img').src = picture.url;
-    cloneInElement.querySelector('.picture__likes').textContent = picture.likes;
-    cloneInElement.querySelector('.picture__comments').textContent = picture.comments.length;
+  var buttonNew = document.querySelector('#filter-new');
+  var BUTTON_NEW_LENGTH = 10;
+  buttonNew.addEventListener('click', function () {
+    window.util.resetActive(activeClassName, removeClassName);
+    var randomPictures = window.util.getUniqueElement(pictures, BUTTON_NEW_LENGTH);
+    deletePictures();
+    updatePictures(randomPictures);
 
-    return cloneInElement;
-  }
+    buttonNew.classList.add('img-filters__button--active');
+  });
 
-  // Добавляем шаблон в контейнер для изображений
-  var successHandler = function addtoPictures(array) {
-    var fragment = document.createDocumentFragment();
-    var picturesContainer = document.querySelector('.pictures');
+  var buttonDiscussed = document.querySelector('#filter-discussed');
+  buttonDiscussed.addEventListener('click', function () {
+    window.util.resetActive(activeClassName, removeClassName);
+    deletePictures();
+    var picturesCopy = pictures.slice();
+    // compare функция коллбэк
+    var compare = function (a, b) {
+      if (a.comments.length > b.comments.length) {
+        return -1;
+      }
+      if (a.comments.length < b.comments.length) {
+        return 1;
+      }
+      return 0;
+    };
+    picturesCopy.sort(compare);
+    updatePictures(picturesCopy);
+    buttonDiscussed.classList.add('img-filters__button--active');
+  });
 
-    for (var i = 0; i < array.length; i++) {
-      picturesContainer.appendChild(renderUserPictures(array[i]));
-    }
+  var activeClassName = '.img-filters__button--active';
+  var removeClassName = 'img-filters__button--active';
 
-    return fragment;
+  var updatePictures = function (append) {
+    window.render.addPictures(append);
+  };
+
+  var deletePictures = function (remove) {
+    window.render.removePictures(remove);
+  };
+
+  var pictures = [];
+  var successHandler = function (data) {
+    pictures = data;
+
+    updatePictures(pictures);
+    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
   };
 
   var errorHandler = function (errorMessage) {
@@ -39,6 +72,7 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
-  window.load(successHandler, errorHandler);
+  var URL = 'https://js.dump.academy/kekstagram/data';
 
+  window.load(URL, successHandler, errorHandler);
 })();

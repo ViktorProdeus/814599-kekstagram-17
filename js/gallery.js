@@ -2,52 +2,6 @@
 
 (function () {
 
-
-  var buttonPopular = document.querySelector('#filter-popular');
-  var onFilterPopularClick = window.debounce(function () {
-    deletePictures();
-    updatePictures(pictures);
-    window.util.resetActive(activeClassName, removeClassName);
-    buttonPopular.classList.add('img-filters__button--active');
-  });
-  buttonPopular.addEventListener('click', onFilterPopularClick);
-
-  var buttonNew = document.querySelector('#filter-new');
-  var BUTTON_NEW_LENGTH = 10;
-  var onFilterNewClick = window.debounce(function () {
-    window.util.resetActive(activeClassName, removeClassName);
-    var randomPictures = window.util.getUniqueElement(pictures, BUTTON_NEW_LENGTH);
-    deletePictures();
-    updatePictures(randomPictures);
-
-    buttonNew.classList.add('img-filters__button--active');
-  });
-  buttonNew.addEventListener('click', onFilterNewClick);
-
-  var buttonDiscussed = document.querySelector('#filter-discussed');
-  var onFilterDiscussedClick = window.debounce(function () {
-    window.util.resetActive(activeClassName, removeClassName);
-    deletePictures();
-    var picturesCopy = pictures.slice();
-    // compare функция коллбэк
-    var compare = function (a, b) {
-      if (a.comments.length > b.comments.length) {
-        return -1;
-      }
-      if (a.comments.length < b.comments.length) {
-        return 1;
-      }
-      return 0;
-    };
-    picturesCopy.sort(compare);
-    updatePictures(picturesCopy);
-    buttonDiscussed.classList.add('img-filters__button--active');
-  });
-  buttonDiscussed.addEventListener('click', onFilterDiscussedClick);
-
-  var activeClassName = '.img-filters__button--active';
-  var removeClassName = 'img-filters__button--active';
-
   var updatePictures = function (append) {
     window.render.addPictures(append);
   };
@@ -78,4 +32,70 @@
   var URL = 'https://js.dump.academy/kekstagram/data';
 
   window.load(URL, successHandler, errorHandler);
+
+  var activeClassName = '.img-filters__button--active';
+  var removeClassName = 'img-filters__button--active';
+
+  var onFilterPopularClick = function () {
+    var buttonPopular = document.querySelector('#filter-popular');
+    window.util.resetActive(activeClassName, removeClassName);
+    buttonPopular.classList.add('img-filters__button--active');
+    deletePictures();
+    updatePictures(pictures);
+  };
+
+  var onFilterNewClick = function () {
+    var BUTTON_NEW_LENGTH = 10;
+    var buttonNew = document.querySelector('#filter-new');
+    window.util.resetActive(activeClassName, removeClassName);
+    var randomPictures = window.util.getUniqueElement(pictures, BUTTON_NEW_LENGTH);
+    deletePictures();
+    updatePictures(randomPictures);
+
+    buttonNew.classList.add('img-filters__button--active');
+  };
+
+  var onFilterDiscussedClick = function () {
+    var buttonDiscussed = document.querySelector('#filter-discussed');
+    window.util.resetActive(activeClassName, removeClassName);
+    buttonDiscussed.classList.add('img-filters__button--active');
+
+    deletePictures();
+    var picturesCopy = pictures.slice();
+    // compare функция коллбэк
+    var compare = function (a, b) {
+      if (a.comments.length > b.comments.length) {
+        return -1;
+      }
+      if (a.comments.length < b.comments.length) {
+        return 1;
+      }
+      return 0;
+    };
+    picturesCopy.sort(compare);
+    updatePictures(picturesCopy);
+  };
+
+  var onButtonWithDebounceClick = window.debounce(function (evt) {
+    var target = evt.target;
+
+    while (target !== document) {
+      if (target.id === 'filter-popular') {
+        onFilterPopularClick();
+        return;
+      }
+      if (target.id === 'filter-new') {
+        onFilterNewClick();
+        return;
+      }
+      if (target.id === 'filter-discussed') {
+        onFilterDiscussedClick();
+        return;
+      }
+
+      target = target.parentNode;
+    }
+  });
+
+  document.addEventListener('click', onButtonWithDebounceClick);
 })();

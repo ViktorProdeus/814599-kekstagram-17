@@ -36,31 +36,32 @@
   var activeClassName = '.img-filters__button--active';
   var removeClassName = 'img-filters__button--active';
 
-  var onFilterPopularClick = function () {
-    var buttonPopular = document.querySelector('#filter-popular');
-    window.util.resetActive(activeClassName, removeClassName);
-    buttonPopular.classList.add('img-filters__button--active');
+  var renderPictures = window.debounce(function (allPictures) {
     deletePictures();
-    updatePictures(pictures);
+    updatePictures(allPictures);
+  });
+
+  var makeActive = function (buttonName, selector) {
+    buttonName = document.querySelector(selector);
+    window.util.resetActive(activeClassName, removeClassName);
+    buttonName.classList.add('img-filters__button--active');
+  };
+
+  var onFilterPopularClick = function () {
+    makeActive('buttonPopular', '#filter-popular');
+    renderPictures(pictures);
   };
 
   var onFilterNewClick = function () {
     var BUTTON_NEW_LENGTH = 10;
-    var buttonNew = document.querySelector('#filter-new');
-    window.util.resetActive(activeClassName, removeClassName);
     var randomPictures = window.util.getUniqueElement(pictures, BUTTON_NEW_LENGTH);
-    deletePictures();
-    updatePictures(randomPictures);
-
-    buttonNew.classList.add('img-filters__button--active');
+    makeActive('buttonNew', '#filter-new');
+    renderPictures(randomPictures);
   };
 
   var onFilterDiscussedClick = function () {
-    var buttonDiscussed = document.querySelector('#filter-discussed');
-    window.util.resetActive(activeClassName, removeClassName);
-    buttonDiscussed.classList.add('img-filters__button--active');
+    makeActive('buttonDiscussed', '#filter-discussed');
 
-    deletePictures();
     var picturesCopy = pictures.slice();
     // compare функция коллбэк
     var compare = function (a, b) {
@@ -73,10 +74,10 @@
       return 0;
     };
     picturesCopy.sort(compare);
-    updatePictures(picturesCopy);
+    renderPictures(picturesCopy);
   };
 
-  var onButtonWithDebounceClick = window.debounce(function (evt) {
+  var onButtonFilterClick = function (evt) {
     var target = evt.target;
 
     while (target !== document) {
@@ -95,7 +96,7 @@
 
       target = target.parentNode;
     }
-  });
+  };
 
-  document.addEventListener('click', onButtonWithDebounceClick);
+  document.addEventListener('click', onButtonFilterClick);
 })();

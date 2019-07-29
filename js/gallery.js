@@ -4,16 +4,17 @@
 
 
   var buttonPopular = document.querySelector('#filter-popular');
-  buttonPopular.addEventListener('click', function () {
+  var onFilterPopularClick = window.debounce(function () {
     deletePictures();
     updatePictures(pictures);
     window.util.resetActive(activeClassName, removeClassName);
     buttonPopular.classList.add('img-filters__button--active');
   });
+  buttonPopular.addEventListener('click', onFilterPopularClick);
 
   var buttonNew = document.querySelector('#filter-new');
   var BUTTON_NEW_LENGTH = 10;
-  buttonNew.addEventListener('click', function () {
+  var onFilterNewClick = window.debounce(function () {
     window.util.resetActive(activeClassName, removeClassName);
     var randomPictures = window.util.getUniqueElement(pictures, BUTTON_NEW_LENGTH);
     deletePictures();
@@ -21,9 +22,10 @@
 
     buttonNew.classList.add('img-filters__button--active');
   });
+  buttonNew.addEventListener('click', onFilterNewClick);
 
   var buttonDiscussed = document.querySelector('#filter-discussed');
-  buttonDiscussed.addEventListener('click', function () {
+  var onFilterDiscussedClick = window.debounce(function () {
     window.util.resetActive(activeClassName, removeClassName);
     deletePictures();
     var picturesCopy = pictures.slice();
@@ -41,6 +43,7 @@
     updatePictures(picturesCopy);
     buttonDiscussed.classList.add('img-filters__button--active');
   });
+  buttonDiscussed.addEventListener('click', onFilterDiscussedClick);
 
   var activeClassName = '.img-filters__button--active';
   var removeClassName = 'img-filters__button--active';

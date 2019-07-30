@@ -51,6 +51,7 @@
 
         if (current) {
           current.classList.remove('img-filters__button--active');
+          target.classList.add('img-filters__button--active');
         }
 
         if (target.id === 'filter-new') {

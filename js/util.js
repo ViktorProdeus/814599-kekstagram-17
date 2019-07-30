@@ -26,13 +26,6 @@
         }
       }
       return uniqueElement;
-    },
-
-    resetActive: function (className, classNameDelete) {
-      var activeButtons = document.querySelectorAll(className);
-      activeButtons.forEach(function (it) {
-        it.classList.remove(classNameDelete);
-      });
     }
   };
 })();

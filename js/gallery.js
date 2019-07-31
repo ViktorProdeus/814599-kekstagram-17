@@ -42,23 +42,18 @@
     var target = evt.target;
 
     while (target !== document) {
-
       if (['filter-popular', 'filter-new', 'filter-discussed'].indexOf(target.id) !== -1) {
         var current = document.querySelector('.img-filters__button--active');
-        var images = pictures.slice();
-
-        target.classList.add('img-filters__button--active');
-
         if (current) {
           current.classList.remove('img-filters__button--active');
-          target.classList.add('img-filters__button--active');
         }
+        target.classList.add('img-filters__button--active');
 
+        var images = pictures.slice();
         if (target.id === 'filter-new') {
           var COUNT = 10;
           images = window.util.getUniqueElement(images, COUNT);
         }
-
         if (target.id === 'filter-discussed') {
           images.sort(function (a, b) {
             return b.comments.length - a.comments.length;

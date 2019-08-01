@@ -16,6 +16,10 @@
 
     updatePictures(pictures);
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+
+    window.render.renderPicturePreview(pictures);
+    var bigPicture = document.querySelector('.big-picture');
+    bigPicture.classList.remove('hidden');
   };
 
   var errorHandler = function (errorMessage) {

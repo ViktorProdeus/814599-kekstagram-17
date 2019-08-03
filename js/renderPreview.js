@@ -10,23 +10,23 @@
     cloneInElement.querySelector('.picture__img').src = picture.url;
     cloneInElement.querySelector('.picture__likes').textContent = picture.likes;
     cloneInElement.querySelector('.picture__comments').textContent = picture.comments.length;
-    cloneInElement.setAttribute('data-id', id); // gggg
+    cloneInElement.setAttribute('data-id', id);
     return cloneInElement;
   }
 
 
   window.renderPreview = {
 
-    pictures: [], // [[[[]]]]
+    pictures: [],
 
     addPictures: function (array) {
-      window.renderPreview.pictures = array; // pppp
+      window.renderPreview.pictures = array;
       var fragment = document.createDocumentFragment();
       var picturesContainer = document.querySelector('.pictures');
 
       for (var i = 0; i < array.length; i++) {
 
-        fragment.appendChild(renderUserPictures(array[i], i)); // gggg
+        fragment.appendChild(renderUserPictures(array[i], i));
       }
 
       picturesContainer.appendChild(fragment);
@@ -35,7 +35,7 @@
 
     removePictures: function () {
       var pictures = document.querySelectorAll('.picture');
-      // forEach для псевдомассива
+
       pictures.forEach(function (node) {
         node.remove();
       });

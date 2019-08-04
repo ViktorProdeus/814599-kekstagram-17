@@ -25,12 +25,10 @@
       var picturesContainer = document.querySelector('.pictures');
 
       for (var i = 0; i < array.length; i++) {
-
         fragment.appendChild(renderUserPictures(array[i], i));
       }
 
       picturesContainer.appendChild(fragment);
-
     },
 
     removePictures: function () {

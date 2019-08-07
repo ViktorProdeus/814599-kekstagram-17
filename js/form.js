@@ -291,6 +291,7 @@
         var textHashtags = document.querySelector('.text__hashtags');
         var tags = textHashtags.value.split(' ');
         var arrayTags = [];
+        textHashtags.style = 'outline: 3px solid red;'
 
         textHashtags.setCustomValidity('');
         for (var i = 0; i < tags.length; i++) {
@@ -325,6 +326,7 @@
             return;
           }
 
+          textHashtags.style = 'outline: 3px solid green;'
           arrayTags.push(tags[i]);
         }
 
@@ -334,5 +336,88 @@
   };
 
   document.addEventListener('input', validate);
+
+  var main = document.querySelector('main');
+  var imgUploadForm = document.querySelector('.img-upload__form');
+
+  var showMessage = function (type) {
+    var template = document.querySelector('#' + type)
+      .content.querySelector('.' + type);
+
+    var message = template.cloneNode(true);
+
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(message);
+    main.appendChild(fragment);
+  };
+
+  var onMessageEscPress = function (evt) {
+    if (evt.keyCode === window.util.ESC_KEYCODE) {
+      closeMessage(evt);
+    }
+  };
+
+  var closeMessage = function (evt) {
+    evt.stopPropagation();
+    if (document.querySelector('.success')) {
+      document.querySelector('.success').remove();
+    } else {
+       document.querySelector('.error').remove();
+    }
+
+    document.removeEventListener('click', onMessageEscPress);
+  };
+
+  var successFormHandler = function (evt) {
+    showMessage('success');
+    var successBtn = document.querySelector('.success__button');
+    successBtn.addEventListener('click', closeMessage);
+
+    document.querySelector('.success').addEventListener('click', function (evt) {
+      var target = evt.target;
+      if (target.closest('.success__inner') !== null) {
+        return;
+      }
+      document.querySelector('.success').remove();
+      evt.stopPropagation();
+    });
+
+    document.addEventListener('keydown', onMessageEscPress);
+
+  };
+
+  var errorFormHandler = function () {
+    showMessage('error');
+
+    var errorBtns = document.querySelectorAll('.error__button');
+    for (var i = 0; i < errorBtns.length; i++) {
+      errorBtns[i].addEventListener('click', closeMessage);
+      document.querySelector('.error').addEventListener('click', function (evt) {
+        var target = evt.target;
+        if (target.closest('.error__inner') !== null) {
+          return;
+        }
+        document.querySelector('.error').remove();
+        evt.stopPropagation();
+      });
+
+      document.addEventListener('keydown', onMessageEscPress);
+    }
+
+  };
+
+  var onFormSubmit = function (evt) {
+
+    var URL = 'https://js.dump.academy/kekstagram';
+
+    window.load(URL, successFormHandler, errorFormHandler, 'POST', new FormData(imgUploadForm));
+    evt.preventDefault();
+
+    imgUploadForm.reset();
+    closePopup();
+  };
+
+
+  imgUploadForm.addEventListener('submit', onFormSubmit);
 
 })();

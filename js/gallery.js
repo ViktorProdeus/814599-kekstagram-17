@@ -3,11 +3,11 @@
 (function () {
 
   var updatePictures = function (append) {
-    window.renderPreview.addPictures(append); // add
+    window.renderPreview.addPictures(append);
   };
 
   var deletePictures = function () {
-    window.renderPreview.removePictures(); // add
+    window.renderPreview.removePictures();
   };
 
   var pictures = [];
@@ -16,9 +16,6 @@
     updatePictures(pictures);
     document.querySelector('.img-filters').classList.remove('img-filters--inactive');
 
-    // window.renderPreview(pictures);
-    // var bigPicture = document.querySelector('.big-picture');
-    // bigPicture.classList.remove('hidden');
   };
 
   var errorHandler = function (errorMessage) {
@@ -34,7 +31,7 @@
 
   var URL = 'https://js.dump.academy/kekstagram/data';
 
-  window.load(URL, successHandler, errorHandler);
+  window.load(URL, successHandler, errorHandler, 'GET');
 
   var renderPictures = window.debounce(function (allPictures) {
     deletePictures();
@@ -46,8 +43,8 @@
 
     while (target !== document) {
       if (target.classList.contains('picture')) {
-        var id = target.getAttribute('data-id'); // dfdfdf
-        window.renderFullview.addtoFullview(window.renderPreview.pictures[id]); // jjkk
+        var id = target.getAttribute('data-id');
+        window.renderFullview.addtoFullview(window.renderPreview.pictures[id]);
       }
       if (['filter-popular', 'filter-new', 'filter-discussed'].indexOf(target.id) !== -1) {
         var current = document.querySelector('.img-filters__button--active');

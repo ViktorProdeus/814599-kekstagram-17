@@ -291,10 +291,12 @@
         var textHashtags = document.querySelector('.text__hashtags');
         var tags = textHashtags.value.split(' ');
         var arrayTags = [];
-        textHashtags.style = 'outline: 3px solid red;'
 
+        textHashtags.style = 'outline: 3px solid red';
         textHashtags.setCustomValidity('');
+
         for (var i = 0; i < tags.length; i++) {
+
 
           if (tags[i].indexOf('#') !== 0) {
             textHashtags.setCustomValidity('хэш-тег начинается с символа # (решётка)');
@@ -326,7 +328,7 @@
             return;
           }
 
-          textHashtags.style = 'outline: 3px solid green;'
+          textHashtags.style = 'outline: 3px solid green';
           arrayTags.push(tags[i]);
         }
 
@@ -362,13 +364,13 @@
     if (document.querySelector('.success')) {
       document.querySelector('.success').remove();
     } else {
-       document.querySelector('.error').remove();
+      document.querySelector('.error').remove();
     }
 
     document.removeEventListener('click', onMessageEscPress);
   };
 
-  var successFormHandler = function (evt) {
+  var successFormHandler = function () {
     showMessage('success');
     var successBtn = document.querySelector('.success__button');
     successBtn.addEventListener('click', closeMessage);

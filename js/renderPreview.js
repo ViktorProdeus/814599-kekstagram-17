@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   function renderUserPictures(picture, id) {
     var picturesTemplate = document.querySelector('#picture')
       .content.querySelector('.picture');

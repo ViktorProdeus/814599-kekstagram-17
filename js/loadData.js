@@ -1,3 +1,5 @@
+'use strict';
+
 (function () {
 
   window.load = function (url, onSuccess, onError, method, data) {
